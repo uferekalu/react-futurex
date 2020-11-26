@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { Badge } from 'reactstrap';
+import history from '../history';
+import Detail from './Detail';
+import Home from './Home';
 
 class ProductList extends Component {
     constructor(props) {
@@ -77,26 +81,6 @@ class ProductList extends Component {
         });
     }
 
-    showDetail = (el) => {
-        console.log('This is show detail', el);
-        <Row className="detail-product">    
-            <Col xs={12} md={12}>
-                <img src={el.image} className="img-fluid" alt={el.category} />
-            </Col>
-            <Col xs={6} md={6}>
-                <p>{el.description}</p>
-            </Col>
-            <Col xs={3} md={3}>
-                <p>{el.title}</p>
-            </Col>
-            <Col xs={3} md={3}>
-                <p>{el.price}</p>
-            </Col>
-            <Col xs={12} md={12}>
-                <Button className="cart-button" onClick={() => this.addToCart(el)}>ADD TO CART</Button>
-            </Col>
-        </Row>        
-    }
     addToCart = (el) => {
         let cartList = [...this.state.cart];
         this.setState({
@@ -116,41 +100,48 @@ class ProductList extends Component {
 
     render() {
         return(
-            
-                <Row className="items">
-                {
-                    this.state.products.map((el) => (
-                            <Col xs={6} md={4} lg={3} className="item-list"  key={el.id}>
-                                <Col xs={12} md={12} className="item-img">
-                                    <img 
-                                        src={el.image} 
-                                        alt={el.category} 
-                                        className="img-fluid"
-                                        width="150px"
-                                        height="150px"
-                                    />
+            <BrowserRouter>
+                <Container className="home-list">
+                    <Route path="/detail/:id" component={Detail} />
+                    <Route path="/" exact={true} component={Home} />
+                    <Row className="items">
+                    {
+                        this.state.products.map((el) => (
+                                <Col xs={6} md={4} lg={3.5} className="item-list"  key={el.id}>
+                                    <Col xs={12} md={12} className="item-img">
+                                    <Link to={'/detail/' + el.id}>
+                                        <img 
+                                            src={el.image} 
+                                            alt={el.category} 
+                                            className="img-fluid"
+                                            width="150px"
+                                            height="150px"
+                                        />
+                                    </Link>
+                                    </Col>
+                                    <Row className="item-detail">
+                                        <Col xs={6} md={6}>
+                                            <h3>{el.category}</h3>
+                                        </Col>
+                                        <Col xs={6} md={6}>
+                                            <h3><Badge color="success">PRICE:</Badge> ${el.price}</h3>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={6} md={6}>
+                                           <Link to={'/detail/' + el.id}><Button className="detail-button">SEE DETAIL</Button></Link> 
+                                        </Col>
+                                        <Col xs={6} md={6}>
+                                            <Button className="cart-button" onClick={() => this.addToCart(el)}>ADD TO CART</Button>
+                                        </Col>
+                                    </Row>
                                 </Col>
-                                <Row className="item-detail">
-                                    <Col xs={6} md={6}>
-                                        <h3>{el.category}</h3>
-                                    </Col>
-                                    <Col xs={6} md={6}>
-                                        <h3><Badge color="success">PRICE:</Badge> ${el.price}</h3>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={6} md={6}>
-                                        <Button className="detail-button"onClick={() => this.showDetail(el)}>SEE DETAIL</Button>
-                                    </Col>
-                                    <Col xs={6} md={6}>
-                                        <Button className="cart-button" onClick={() => this.addToCart(el)}>ADD TO CART</Button>
-                                    </Col>
-                                </Row>
-                            </Col>
-                    ))
-                }
-                </Row>
-        )
+                        ))
+                    }
+                    </Row>
+                </Container>
+            </BrowserRouter>
+        );
     }
     
 }

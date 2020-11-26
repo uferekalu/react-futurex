@@ -1,15 +1,13 @@
+import React from 'react';
 import './App.css';
-import { Container } from 'react-bootstrap';
-import ProductList from './components/ProductList';
 import Navbar from './components/Navbar';
+import Routes from './Routes';
 
 function App() {
   return (
     <>
       <Navbar />
-      <Container className="home-list">
-        <ProductList />
-      </Container>
+      <Routes />
     </>
   );
 }
